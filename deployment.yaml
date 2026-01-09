@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-devops
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello-container
+        image: ghcr.io/malizia26/lab-devops:latest
+        imagePullPolicy: Always
+      # On dit à K8s d'utiliser le secret créé à l'étape 1
+      imagePullSecrets:
+      - name: ghcr-auth
