@@ -1,0 +1,31 @@
+name: CI-Build
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Autorisation d'écrire l'image sur GitHub
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # L'image sera nommée : ghcr.io/malizia26/lab-devops:latest
+          tags: ghcr.io/${{ github.repository }}:latest
+          platforms: linux/arm64 # On build directement pour ton Raspberry Pi
