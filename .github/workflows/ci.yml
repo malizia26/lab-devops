@@ -28,4 +28,4 @@ jobs:
           push: true
           # L'image sera nommée : ghcr.io/malizia26/lab-devops:latest
           tags: ghcr.io/${{ github.repository }}:latest
-          platforms: linux/arm64 # On build directement pour ton Raspberry Pi
+          platforms: linux/amd64
