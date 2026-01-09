@@ -1,22 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-devops
-  namespace: default
+  name: rpi-monitoring
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello
+      app: monitoring
   template:
     metadata:
       labels:
-        app: hello
+        app: monitoring
     spec:
       containers:
-      - name: hello-container
+      - name: monitor
         image: ghcr.io/malizia26/lab-devops:latest
         imagePullPolicy: Always
-      # On dit à K8s d'utiliser le secret créé à l'étape 1
+        ports:
+        - containerPort: 5000
       imagePullSecrets:
       - name: ghcr-auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitoring-service
+spec:
+  type: NodePort
+  selector:
+    app: monitoring
+  ports:
+    - port: 80
+      targetPort: 5000
+      nodePort: 30500
